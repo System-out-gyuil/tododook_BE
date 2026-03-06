@@ -1,0 +1,22 @@
+server:
+  port: 8060
+
+spring:
+  application:
+    name: tododook
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/tododook_local?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+    username: root
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+jwt:
+  secret: tododook-jwt-secret-key-min-256-bits-for-hs256-please-change-in-production
+  expiration-ms: 86400000

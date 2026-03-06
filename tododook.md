@@ -25,10 +25,12 @@ Websocket, Redis, OAuth2 고려
 | id | index | 인덱스번호 | PK |
 | name | string | 유저 이름 | unique, NN |
 | email | string | 이메일 | unique, NN |
-| pw | string | 비밀번호 | NN |
-| pnum | string | 폰번호 | unique |
+| password | string | 비밀번호 | NN |
+| phone_num | string | 폰번호 | unique |
 | settings | dict | 유저설정모음 |  |
 | agreements | dict | 유저동의항목 |  |
+| created_at | datetime | 생성일 |  |
+| updated_at | datetime | 수정일 |  |
 
 
 ### tbl_todo_category
@@ -41,6 +43,8 @@ Websocket, Redis, OAuth2 고려
 | color | string | 카테고리 색상 | default : white |
 | order | int | 카테고리 순서 |  |
 | reveal | boolean | 카테고리 공개 | default : true |
+| created_at | datetime | 생성일 |  |
+| updated_at | datetime | 수정일 |  |
 
 
 ### tbl_todo_routine
@@ -54,6 +58,8 @@ Websocket, Redis, OAuth2 고려
 | end_date | string | 루틴 마감날짜 | |
 | passivity | boolean | 루틴 수동으로 할일 추가 | default : false |
 | repeat | dict | 루틴 반복설정 | 아래 `repeat` 구조 참고 |
+| created_at | datetime | 생성일 |  |
+| updated_at | datetime | 수정일 |  |
 
 
 ### tbl_todo
@@ -67,7 +73,8 @@ Websocket, Redis, OAuth2 고려
 | done | boolean | 할일 완료 여부 | default : false |
 | start_time | String | 할일 시작 시간 |  |
 | end_time | String | 할일 종료 시간 |  |
-
+| created_at | datetime | 생성일 |  |
+| updated_at | datetime | 수정일 |  |
 
 <br>
 
