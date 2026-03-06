@@ -1,41 +1,35 @@
 package com.gyul.tododook.domain.todo.entity;
+import com.gyul.tododook.domain.user.entity.User;
+import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 import com.gyul.tododook.global.jpa.BaseEntity;
-import jakarta.persistence.Entity;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "todo")
-public class Todo extends BaseEntity {
+@Table(name = "todo_category")
+public class TodoCategory extends BaseEntity {
 
     @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private String color;
+
+    @Column(nullable = false, name = "category_order")
+    private int categoryOrder;
 
     @Column(nullable = false)
-    private boolean done;
-
-    @Column(nullable = false)
-    private LocalTime startTime;
-
-    @Column(nullable = false)
-    private LocalTime endTime;
+    private boolean reveal;
 
     @ManyToOne
-    @JoinColumn(name = "todo_category_id", nullable = false)
-    private TodoCategory todoCategory;
-
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

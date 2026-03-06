@@ -90,3 +90,9 @@ Websocket, Redis, OAuth2 고려
 - **`weekly_days`**: 요일 배열. `0`=일요일 ~ `6`=토요일 (또는 팀 규칙으로 1=월 ~ 7=일 등 통일).
 - **`monthly_days`**: 해당 월의 날짜(일) 배열. `1`~`31`. 없는 날(예: 2월 30일)은 생성 시 스킵.
 - **`yearly_dates`**: `{ "month": 1~12, "day": 1~31 }` 객체 배열. 여러 날 저장 가능.
+
+
+repeat과 order가 MySQL 예약어라서 Hibernate로 테이블 생성 시 오류 발생으로 컬럼명 변경
+
+order > category_order
+repeat > repeat_days
