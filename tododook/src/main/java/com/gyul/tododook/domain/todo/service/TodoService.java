@@ -1,7 +1,9 @@
 package com.gyul.tododook.domain.todo.service;
 
 import com.gyul.tododook.domain.todo.dto.TodoCreateRequest;
+import com.gyul.tododook.domain.todo.dto.TodoDateUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoDto;
+import com.gyul.tododook.domain.todo.dto.TodoReorderRequest;
 import com.gyul.tododook.domain.todo.entity.Todo;
 import com.gyul.tododook.domain.todo.entity.TodoCategory;
 import com.gyul.tododook.domain.todo.repository.TodoCategoryRepository;
@@ -27,7 +29,7 @@ public class TodoService {
 
     @Transactional(readOnly = true)
     public List<TodoDto> getTodosByUserAndDate(Long userId, LocalDate date) {
-        return todoRepository.findByTodoCategory_User_IdAndDateOrderByStartTime(userId, date).stream()
+        return todoRepository.findByTodoCategory_User_IdAndDateOrderByTodoOrder(userId, date).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
@@ -39,7 +41,7 @@ public class TodoService {
         if (!category.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
-        return todoRepository.findByTodoCategory_IdOrderByStartTime(categoryId).stream()
+        return todoRepository.findByTodoCategory_IdOrderByTodoOrder(categoryId).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
@@ -51,10 +53,13 @@ public class TodoService {
         if (!category.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
+        int nextOrder = todoRepository.countByTodoCategory_IdAndDate(
+                request.getCategoryId(), request.getDate());
         Todo todo = new Todo();
         todo.setName(request.getName());
         todo.setDate(request.getDate());
         todo.setDone(false);
+        todo.setTodoOrder(nextOrder);
         todo.setStartTime(request.getStartTime() != null ? request.getStartTime() : DEFAULT_START);
         todo.setEndTime(request.getEndTime() != null ? request.getEndTime() : DEFAULT_END);
         todo.setTodoCategory(category);
@@ -74,6 +79,35 @@ public class TodoService {
         return toDto(todo);
     }
 
+    @Transactional
+    public void reorderTodos(Long userId, TodoReorderRequest request) {
+        List<Long> todoIds = request.getTodoIds();
+        for (int i = 0; i < todoIds.size(); i++) {
+            Todo todo = todoRepository.findById(todoIds.get(i))
+                    .orElseThrow(() -> new IllegalArgumentException("할일을 찾을 수 없습니다."));
+            if (!todo.getTodoCategory().getUser().getId().equals(userId)) {
+                throw new IllegalArgumentException("권한이 없습니다.");
+            }
+            todo.setTodoOrder(i);
+            todoRepository.save(todo);
+        }
+    }
+
+    @Transactional
+    public TodoDto updateDate(Long userId, Long todoId, TodoDateUpdateRequest request) {
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new IllegalArgumentException("할일을 찾을 수 없습니다."));
+        if (!todo.getTodoCategory().getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+        int nextOrder = todoRepository.countByTodoCategory_IdAndDate(
+                todo.getTodoCategory().getId(), request.getDate());
+        todo.setDate(request.getDate());
+        todo.setTodoOrder(nextOrder);
+        todo = todoRepository.save(todo);
+        return toDto(todo);
+    }
+
     private TodoDto toDto(Todo t) {
         return new TodoDto(
                 t.getId(),
@@ -82,7 +116,8 @@ public class TodoService {
                 t.isDone(),
                 t.getStartTime(),
                 t.getEndTime(),
-                t.getTodoCategory().getId()
+                t.getTodoCategory().getId(),
+                t.getTodoOrder()
         );
     }
 }

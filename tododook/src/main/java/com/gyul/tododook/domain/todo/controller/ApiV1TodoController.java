@@ -8,7 +8,9 @@ import com.gyul.tododook.domain.todo.dto.TodoCategoryCreateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoCategoryDto;
 import com.gyul.tododook.domain.todo.dto.TodoCategoryUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoCreateRequest;
+import com.gyul.tododook.domain.todo.dto.TodoDateUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoDto;
+import com.gyul.tododook.domain.todo.dto.TodoReorderRequest;
 import com.gyul.tododook.domain.todo.service.TodoCategoryService;
 import com.gyul.tododook.domain.todo.service.TodoRoutineService;
 import com.gyul.tododook.domain.todo.service.TodoService;
@@ -101,6 +103,21 @@ public class ApiV1TodoController {
     public ResponseEntity<TodoDto> toggleTodoDone(@PathVariable Long id) {
         Long userId = getCurrentUserId();
         TodoDto updated = todoService.toggleDone(userId, id);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PatchMapping("/todos/reorder")
+    public ResponseEntity<Void> reorderTodos(@Valid @RequestBody TodoReorderRequest request) {
+        Long userId = getCurrentUserId();
+        todoService.reorderTodos(userId, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/todos/{id}/date")
+    public ResponseEntity<TodoDto> updateTodoDate(@PathVariable Long id,
+                                                   @Valid @RequestBody TodoDateUpdateRequest request) {
+        Long userId = getCurrentUserId();
+        TodoDto updated = todoService.updateDate(userId, id, request);
         return ResponseEntity.ok(updated);
     }
 

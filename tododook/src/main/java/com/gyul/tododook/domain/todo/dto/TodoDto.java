@@ -19,4 +19,5 @@ public class TodoDto {
     private LocalTime startTime;
     private LocalTime endTime;
     private Long categoryId;
+    private int todoOrder;
 }

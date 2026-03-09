@@ -32,6 +32,9 @@ public class Todo extends BaseEntity {
 
     private LocalTime endTime;
 
+    @Column(nullable = false, name = "todo_order")
+    private int todoOrder;
+
     @ManyToOne
     @JoinColumn(name = "todo_category_id", nullable = false)
     private TodoCategory todoCategory;
