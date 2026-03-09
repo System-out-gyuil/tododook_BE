@@ -8,10 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TodoCategoryUpdateRequest {
+public class TodoNameUpdateRequest {
 
     @NotBlank
     private String name;
-
-    private String color;
 }

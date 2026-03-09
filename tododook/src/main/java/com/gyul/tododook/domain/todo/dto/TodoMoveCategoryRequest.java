@@ -1,6 +1,6 @@
 package com.gyul.tododook.domain.todo.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,10 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TodoCategoryUpdateRequest {
+public class TodoMoveCategoryRequest {
 
-    @NotBlank
-    private String name;
-
-    private String color;
+    @NotNull
+    private Long categoryId;
 }

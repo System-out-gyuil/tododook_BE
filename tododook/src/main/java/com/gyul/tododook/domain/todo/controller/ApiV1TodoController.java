@@ -8,6 +8,8 @@ import com.gyul.tododook.domain.todo.dto.TodoCategoryCreateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoCategoryDto;
 import com.gyul.tododook.domain.todo.dto.TodoCategoryUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoCreateRequest;
+import com.gyul.tododook.domain.todo.dto.TodoMoveCategoryRequest;
+import com.gyul.tododook.domain.todo.dto.TodoNameUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoDateUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoDto;
 import com.gyul.tododook.domain.todo.dto.TodoReorderRequest;
@@ -119,6 +121,29 @@ public class ApiV1TodoController {
         Long userId = getCurrentUserId();
         TodoDto updated = todoService.updateDate(userId, id, request);
         return ResponseEntity.ok(updated);
+    }
+
+    @PatchMapping("/todos/{id}/category")
+    public ResponseEntity<TodoDto> updateTodoCategory(@PathVariable Long id,
+                                                       @Valid @RequestBody TodoMoveCategoryRequest request) {
+        Long userId = getCurrentUserId();
+        TodoDto updated = todoService.moveCategory(userId, id, request);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PatchMapping("/todos/{id}/name")
+    public ResponseEntity<TodoDto> updateTodoName(@PathVariable Long id,
+                                                   @Valid @RequestBody TodoNameUpdateRequest request) {
+        Long userId = getCurrentUserId();
+        TodoDto updated = todoService.updateName(userId, id, request);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/todos/{id}")
+    public ResponseEntity<Void> deleteTodo(@PathVariable Long id) {
+        Long userId = getCurrentUserId();
+        todoService.deleteTodo(userId, id);
+        return ResponseEntity.noContent().build();
     }
 
     // ========== Routines ==========

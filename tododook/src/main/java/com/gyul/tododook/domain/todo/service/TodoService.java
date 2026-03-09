@@ -3,6 +3,8 @@ package com.gyul.tododook.domain.todo.service;
 import com.gyul.tododook.domain.todo.dto.TodoCreateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoDateUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoDto;
+import com.gyul.tododook.domain.todo.dto.TodoMoveCategoryRequest;
+import com.gyul.tododook.domain.todo.dto.TodoNameUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoReorderRequest;
 import com.gyul.tododook.domain.todo.entity.Todo;
 import com.gyul.tododook.domain.todo.entity.TodoCategory;
@@ -94,6 +96,26 @@ public class TodoService {
     }
 
     @Transactional
+    public TodoDto moveCategory(Long userId, Long todoId, TodoMoveCategoryRequest request) {
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new IllegalArgumentException("할일을 찾을 수 없습니다."));
+        if (!todo.getTodoCategory().getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+        TodoCategory newCategory = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
+        if (!newCategory.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+        int nextOrder = todoRepository.countByTodoCategory_IdAndDate(
+                request.getCategoryId(), todo.getDate());
+        todo.setTodoCategory(newCategory);
+        todo.setTodoOrder(nextOrder);
+        todo = todoRepository.save(todo);
+        return toDto(todo);
+    }
+
+    @Transactional
     public TodoDto updateDate(Long userId, Long todoId, TodoDateUpdateRequest request) {
         Todo todo = todoRepository.findById(todoId)
                 .orElseThrow(() -> new IllegalArgumentException("할일을 찾을 수 없습니다."));
@@ -106,6 +128,28 @@ public class TodoService {
         todo.setTodoOrder(nextOrder);
         todo = todoRepository.save(todo);
         return toDto(todo);
+    }
+
+    @Transactional
+    public TodoDto updateName(Long userId, Long todoId, TodoNameUpdateRequest request) {
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new IllegalArgumentException("할일을 찾을 수 없습니다."));
+        if (!todo.getTodoCategory().getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+        todo.setName(request.getName());
+        todo = todoRepository.save(todo);
+        return toDto(todo);
+    }
+
+    @Transactional
+    public void deleteTodo(Long userId, Long todoId) {
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new IllegalArgumentException("할일을 찾을 수 없습니다."));
+        if (!todo.getTodoCategory().getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+        todoRepository.delete(todo);
     }
 
     private TodoDto toDto(Todo t) {
