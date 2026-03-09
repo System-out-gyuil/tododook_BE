@@ -1,12 +1,16 @@
 package com.gyul.tododook.domain.todo.controller;
 
 import com.gyul.tododook.domain.todo.dto.CategoryReorderRequest;
+import com.gyul.tododook.domain.todo.dto.RoutineCreateRequest;
+import com.gyul.tododook.domain.todo.dto.RoutineDto;
+import com.gyul.tododook.domain.todo.dto.RoutineUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoCategoryCreateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoCategoryDto;
 import com.gyul.tododook.domain.todo.dto.TodoCategoryUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoCreateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoDto;
 import com.gyul.tododook.domain.todo.service.TodoCategoryService;
+import com.gyul.tododook.domain.todo.service.TodoRoutineService;
 import com.gyul.tododook.domain.todo.service.TodoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +30,7 @@ public class ApiV1TodoController {
 
     private final TodoCategoryService categoryService;
     private final TodoService todoService;
+    private final TodoRoutineService routineService;
 
     private Long getCurrentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -97,5 +102,34 @@ public class ApiV1TodoController {
         Long userId = getCurrentUserId();
         TodoDto updated = todoService.toggleDone(userId, id);
         return ResponseEntity.ok(updated);
+    }
+
+    // ========== Routines ==========
+    @GetMapping("/routines")
+    public ResponseEntity<List<RoutineDto>> getRoutines(@RequestParam Long categoryId) {
+        Long userId = getCurrentUserId();
+        return ResponseEntity.ok(routineService.getRoutinesByCategoryId(userId, categoryId));
+    }
+
+    @PostMapping("/routines")
+    public ResponseEntity<RoutineDto> createRoutine(@Valid @RequestBody RoutineCreateRequest request) {
+        Long userId = getCurrentUserId();
+        RoutineDto created = routineService.createRoutine(userId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PutMapping("/routines/{id}")
+    public ResponseEntity<RoutineDto> updateRoutine(@PathVariable Long id,
+                                                     @Valid @RequestBody RoutineUpdateRequest request) {
+        Long userId = getCurrentUserId();
+        RoutineDto updated = routineService.updateRoutine(userId, id, request);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/routines/{id}")
+    public ResponseEntity<Void> deleteRoutine(@PathVariable Long id) {
+        Long userId = getCurrentUserId();
+        routineService.deleteRoutine(userId, id);
+        return ResponseEntity.noContent().build();
     }
 }
