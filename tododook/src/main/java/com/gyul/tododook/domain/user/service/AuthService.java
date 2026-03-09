@@ -1,5 +1,7 @@
 package com.gyul.tododook.domain.user.service;
 
+import com.gyul.tododook.domain.todo.entity.TodoCategory;
+import com.gyul.tododook.domain.todo.repository.TodoCategoryRepository;
 import com.gyul.tododook.domain.user.dto.AuthResponse;
 import com.gyul.tododook.domain.user.dto.LoginRequest;
 import com.gyul.tododook.domain.user.dto.SignupRequest;
@@ -15,7 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthService {
 
+    private static final String DEFAULT_CATEGORY_NAME = "오늘의 할일";
+
     private final UserRepository userRepository;
+    private final TodoCategoryRepository categoryRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -33,6 +38,14 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user = userRepository.save(user);
+
+        TodoCategory defaultCategory = new TodoCategory();
+        defaultCategory.setName(DEFAULT_CATEGORY_NAME);
+        defaultCategory.setColor("white");
+        defaultCategory.setCategoryOrder(0);
+        defaultCategory.setReveal(true);
+        defaultCategory.setUser(user);
+        categoryRepository.save(defaultCategory);
 
         String token = jwtUtil.generateToken(user.getId(), user.getEmail());
         return new AuthResponse(token, "Bearer", user.getId(), user.getName(), user.getEmail());

@@ -17,7 +17,7 @@ import com.gyul.tododook.global.jpa.BaseEntity;
 @Table(name = "todo_category")
 public class TodoCategory extends BaseEntity {
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)

@@ -2,7 +2,7 @@
 
 - BE : Spring Boot, JPA, JWT
 - FE : HTML, CSS, React, Typescript
-- DB : MySQL
+- DB : MySQL 8.0 (port:3307)
 - ETC : AWS EC2, AWS S3, GitHub, Docker
 
 Websocket, Redis, OAuth2 고려
@@ -91,8 +91,10 @@ Websocket, Redis, OAuth2 고려
 - **`monthly_days`**: 해당 월의 날짜(일) 배열. `1`~`31`. 없는 날(예: 2월 30일)은 생성 시 스킵.
 - **`yearly_dates`**: `{ "month": 1~12, "day": 1~31 }` 객체 배열. 여러 날 저장 가능.
 
+<br>
 
 repeat과 order가 MySQL 예약어라서 Hibernate로 테이블 생성 시 오류 발생으로 컬럼명 변경
-
-order > category_order
+<br>
+order > category_order 
+<br>
 repeat > repeat_days

@@ -19,7 +19,7 @@ import jakarta.persistence.Entity;
 @Table(name = "todo")
 public class Todo extends BaseEntity {
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
@@ -28,10 +28,8 @@ public class Todo extends BaseEntity {
     @Column(nullable = false)
     private boolean done;
 
-    @Column(nullable = false)
     private LocalTime startTime;
 
-    @Column(nullable = false)
     private LocalTime endTime;
 
     @ManyToOne
