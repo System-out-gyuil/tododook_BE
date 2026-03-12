@@ -10,4 +10,6 @@ import java.util.List;
 public interface TodoRoutineRepository extends JpaRepository<TodoRoutine, Long> {
 
     List<TodoRoutine> findByTodoCategory_Id(Long categoryId);
+
+    void deleteByTodoCategory_Id(Long categoryId);
 }

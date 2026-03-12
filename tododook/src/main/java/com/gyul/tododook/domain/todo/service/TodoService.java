@@ -5,6 +5,7 @@ import com.gyul.tododook.domain.todo.dto.TodoDateUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoDto;
 import com.gyul.tododook.domain.todo.dto.TodoMoveCategoryRequest;
 import com.gyul.tododook.domain.todo.dto.TodoNameUpdateRequest;
+import com.gyul.tododook.domain.todo.dto.TodoTimeUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoReorderRequest;
 import com.gyul.tododook.domain.todo.entity.Todo;
 import com.gyul.tododook.domain.todo.entity.TodoCategory;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +26,6 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final TodoCategoryRepository categoryRepository;
 
-    private static final LocalTime DEFAULT_START = LocalTime.of(9, 0);
-    private static final LocalTime DEFAULT_END = LocalTime.of(10, 0);
 
     @Transactional(readOnly = true)
     public List<TodoDto> getTodosByUserAndDate(Long userId, LocalDate date) {
@@ -62,8 +60,8 @@ public class TodoService {
         todo.setDate(request.getDate());
         todo.setDone(false);
         todo.setTodoOrder(nextOrder);
-        todo.setStartTime(request.getStartTime() != null ? request.getStartTime() : DEFAULT_START);
-        todo.setEndTime(request.getEndTime() != null ? request.getEndTime() : DEFAULT_END);
+        todo.setStartTime(request.getStartTime());
+        todo.setEndTime(request.getEndTime());
         todo.setTodoCategory(category);
         todo = todoRepository.save(todo);
         return toDto(todo);
@@ -138,6 +136,19 @@ public class TodoService {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
         todo.setName(request.getName());
+        todo = todoRepository.save(todo);
+        return toDto(todo);
+    }
+
+    @Transactional
+    public TodoDto updateTime(Long userId, Long todoId, TodoTimeUpdateRequest request) {
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new IllegalArgumentException("할일을 찾을 수 없습니다."));
+        if (!todo.getTodoCategory().getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+        todo.setStartTime(request.getStartTime());
+        todo.setEndTime(request.getEndTime());
         todo = todoRepository.save(todo);
         return toDto(todo);
     }

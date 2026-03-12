@@ -17,4 +17,6 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     int countByTodoCategory_IdAndDate(Long categoryId, LocalDate date);
 
     boolean existsByTodoCategory_Id(Long categoryId);
+
+    void deleteByTodoCategory_Id(Long categoryId);
 }

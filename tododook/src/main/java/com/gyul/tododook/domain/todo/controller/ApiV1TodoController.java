@@ -10,6 +10,7 @@ import com.gyul.tododook.domain.todo.dto.TodoCategoryUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoCreateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoMoveCategoryRequest;
 import com.gyul.tododook.domain.todo.dto.TodoNameUpdateRequest;
+import com.gyul.tododook.domain.todo.dto.TodoTimeUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoDateUpdateRequest;
 import com.gyul.tododook.domain.todo.dto.TodoDto;
 import com.gyul.tododook.domain.todo.dto.TodoReorderRequest;
@@ -144,6 +145,13 @@ public class ApiV1TodoController {
         Long userId = getCurrentUserId();
         todoService.deleteTodo(userId, id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/todos/{id}/time")
+    public ResponseEntity<TodoDto> updateTodoTime(@PathVariable Long id,
+                                                  @RequestBody TodoTimeUpdateRequest request) {
+        Long userId = getCurrentUserId();
+        return ResponseEntity.ok(todoService.updateTime(userId, id, request));
     }
 
     // ========== Routines ==========

@@ -6,6 +6,7 @@ import com.gyul.tododook.domain.todo.dto.TodoCategoryUpdateRequest;
 import com.gyul.tododook.domain.todo.entity.TodoCategory;
 import com.gyul.tododook.domain.todo.repository.TodoCategoryRepository;
 import com.gyul.tododook.domain.todo.repository.TodoRepository;
+import com.gyul.tododook.domain.todo.repository.TodoRoutineRepository;
 import com.gyul.tododook.domain.user.entity.User;
 import com.gyul.tododook.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class TodoCategoryService {
 
     private final TodoCategoryRepository categoryRepository;
     private final TodoRepository todoRepository;
+    private final TodoRoutineRepository routineRepository;
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
@@ -67,9 +69,9 @@ public class TodoCategoryService {
         if (!category.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
-        if (todoRepository.existsByTodoCategory_Id(categoryId)) {
-            throw new IllegalArgumentException("이 카테고리에 할일이 있어 삭제할 수 없습니다. 할일을 먼저 삭제하거나 다른 카테고리로 옮겨 주세요.");
-        }
+        // 연결된 투두와 루틴을 먼저 삭제 후 카테고리 삭제
+        routineRepository.deleteByTodoCategory_Id(categoryId);
+        todoRepository.deleteByTodoCategory_Id(categoryId);
         categoryRepository.delete(category);
     }
 
