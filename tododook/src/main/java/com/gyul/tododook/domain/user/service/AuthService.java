@@ -48,7 +48,7 @@ public class AuthService {
         categoryRepository.save(defaultCategory);
 
         String token = jwtUtil.generateToken(user.getId(), user.getEmail());
-        return new AuthResponse(token, "Bearer", user.getId(), user.getName(), user.getEmail());
+        return new AuthResponse(token, "Bearer", user.getId(), user.getName(), user.getEmail(), false);
     }
 
     @Transactional(readOnly = true)
@@ -61,6 +61,6 @@ public class AuthService {
         }
 
         String token = jwtUtil.generateToken(user.getId(), user.getEmail());
-        return new AuthResponse(token, "Bearer", user.getId(), user.getName(), user.getEmail());
+        return new AuthResponse(token, "Bearer", user.getId(), user.getName(), user.getEmail(), false);
     }
 }

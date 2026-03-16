@@ -10,4 +10,6 @@ import java.util.List;
 public interface TodoCategoryRepository extends JpaRepository<TodoCategory, Long> {
 
     List<TodoCategory> findByUser_IdOrderByCategoryOrder(Long userId);
+
+    void deleteByUser_Id(Long userId);
 }

@@ -1,5 +1,8 @@
 package com.gyul.tododook.domain.user.service;
 
+import com.gyul.tododook.domain.todo.repository.TodoCategoryRepository;
+import com.gyul.tododook.domain.todo.repository.TodoRepository;
+import com.gyul.tododook.domain.todo.repository.TodoRoutineRepository;
 import com.gyul.tododook.domain.user.dto.UserProfileResponse;
 import com.gyul.tododook.domain.user.entity.User;
 import com.gyul.tododook.domain.user.repository.UserRepository;
@@ -17,6 +20,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final S3Service s3Service;
+    private final TodoRepository todoRepository;
+    private final TodoRoutineRepository todoRoutineRepository;
+    private final TodoCategoryRepository todoCategoryRepository;
 
     @Transactional(readOnly = true)
     public UserProfileResponse getProfile(Long userId) {
@@ -49,10 +55,39 @@ public class UserService {
     }
 
     @Transactional
+    public UserProfileResponse updateName(Long userId, String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("이름을 입력해주세요.");
+        }
+        String trimmed = name.trim();
+        User user = findUser(userId);
+        if (!trimmed.equals(user.getName()) && userRepository.existsByName(trimmed)) {
+            throw new IllegalArgumentException("이미 사용 중인 이름입니다.");
+        }
+        user.setName(trimmed);
+        return toResponse(user);
+    }
+
+    @Transactional
     public UserProfileResponse updateStatusMessage(Long userId, String statusMessage) {
         User user = findUser(userId);
         user.setStatusMessage(statusMessage == null || statusMessage.isBlank() ? null : statusMessage.trim());
         return toResponse(user);
+    }
+
+    @Transactional
+    public void deleteAccount(Long userId) {
+        User user = findUser(userId);
+
+        if (user.getProfileImage() != null) {
+            s3Service.delete(user.getProfileImage());
+        }
+
+        // FK 제약 순서: Todo → Routine → Category → User
+        todoRepository.deleteByTodoCategory_User_Id(userId);
+        todoRoutineRepository.deleteByTodoCategory_User_Id(userId);
+        todoCategoryRepository.deleteByUser_Id(userId);
+        userRepository.delete(user);
     }
 
     private User findUser(Long userId) {

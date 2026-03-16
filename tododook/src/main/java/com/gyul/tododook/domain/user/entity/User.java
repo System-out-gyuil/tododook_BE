@@ -37,6 +37,9 @@ public class User extends BaseEntity {
     private String agreements;
 
     @Column(unique = true)
+    private String kakaoId;
+
+    @Column(unique = true)
     private String profileImage;
 
     private String statusMessage;

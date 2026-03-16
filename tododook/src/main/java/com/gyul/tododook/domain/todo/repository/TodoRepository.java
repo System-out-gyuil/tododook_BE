@@ -19,4 +19,6 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     boolean existsByTodoCategory_Id(Long categoryId);
 
     void deleteByTodoCategory_Id(Long categoryId);
+
+    void deleteByTodoCategory_User_Id(Long userId);
 }
