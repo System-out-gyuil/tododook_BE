@@ -35,4 +35,9 @@ public class User extends BaseEntity {
 
     @Column(columnDefinition = "json")
     private String agreements;
+
+    @Column(unique = true)
+    private String profileImage;
+
+    private String statusMessage;
 }

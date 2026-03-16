@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: tododook
+  config:
+    import: application_secret.yml
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3307/tododook_local?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
