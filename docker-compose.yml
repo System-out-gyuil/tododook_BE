@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+
+  mysql:
+    image: mysql:8
+    container_name: tododook-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tododook
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: tododook-app
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tododook?useSSL=false&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: tododook
+      SPRING_DATASOURCE_PASSWORD: tododook
+
+volumes:
+  mysql_data:
