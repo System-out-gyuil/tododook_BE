@@ -26,8 +26,8 @@ services:
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tododook?useSSL=false&serverTimezone=Asia/Seoul
-      SPRING_DATASOURCE_USERNAME: tododook
-      SPRING_DATASOURCE_PASSWORD: tododook
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
 
 volumes:
   mysql_data:
