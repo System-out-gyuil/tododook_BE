@@ -9,7 +9,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: tododook
-      MYSQL_USER: root
+      MYSQL_USER: gyul
       MYSQL_PASSWORD: 1234
     ports:
       - "3306:3306"
@@ -26,7 +26,7 @@ services:
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tododook?useSSL=false&serverTimezone=Asia/Seoul
-      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_USERNAME: gyul
       SPRING_DATASOURCE_PASSWORD: 1234
 
 volumes:
