@@ -20,6 +20,8 @@ services:
     depends_on:
       - mysql
     restart: always
+    expose:
+      - "8060"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tododook?serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
       SPRING_DATASOURCE_USERNAME: root
