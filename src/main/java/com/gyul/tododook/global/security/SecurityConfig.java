@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.http.HttpMethod;
 
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // 브라우저 CORS preflight(OPTIONS)는 항상 통과시켜야 합니다.
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/", "/api/v1/auth/**", "/api/oauth/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -46,7 +49,10 @@ public class SecurityConfig {
                 "http://43.200.125.100",
                 "http://43.200.125.100:80",
                 "http://43.200.125.100:3000",
-                "http://43.200.125.100:5173"
+                "http://43.200.125.100:5173",
+                // EC2/배포 도메인에서 요청할 때 origin 허용
+                "https://tododook.com",
+                "https://www.tododook.com"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
