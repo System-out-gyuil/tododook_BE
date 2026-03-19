@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 브라우저 CORS preflight(OPTIONS)는 항상 통과시켜야 합니다.
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/", "/api/v1/auth/**", "/api/oauth/**", "/kakao/**").permitAll()
+                        .requestMatchers("/", "/api/v1/auth/**", "/api/oauth/**", "/api/oauth/kakao/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
