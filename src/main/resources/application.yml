@@ -30,6 +30,6 @@ jwt:
 
 kakao:
   client-id: f7870284b7c4eaedbcfc19f55dcfa93f
-  redirect-uri: http://localhost:5173/kakao/callback
+  redirect-uri: http://tododook.com/kakao/callback
   # client-secret은 application_secret.yml에서 관리
 
