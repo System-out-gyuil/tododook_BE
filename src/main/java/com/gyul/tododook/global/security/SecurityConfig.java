@@ -52,7 +52,8 @@ public class SecurityConfig {
                 "http://43.200.125.100:5173",
                 // EC2/배포 도메인에서 요청할 때 origin 허용
                 "https://tododook.com",
-                "https://www.tododook.com"
+                "https://www.tododook.com",
+                "https://api.tododook.com"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
