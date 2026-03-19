@@ -1,24 +1,9 @@
 version: "3.8"
 
 services:
-
-  mysql:
-    image: mysql:8
-    container_name: tododook-mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: tododook
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-
   app:
     build: .
     container_name: tododook-app
-    depends_on:
-      - mysql
     restart: always
     expose:
       - "8060"
@@ -30,8 +15,7 @@ services:
   nginx:
     image: nginx:alpine
     container_name: tododook-nginx
-    depends_on:
-      - app
+    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -39,8 +23,8 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./data/certbot/www:/var/www/certbot
       - ./data/certbot/conf:/etc/letsencrypt
-    networks:
-      - tododook-net
+    depends_on:
+      - app
 
   certbot:
     image: certbot/certbot
@@ -49,10 +33,8 @@ services:
       - ./data/certbot/www:/var/www/certbot
       - ./data/certbot/conf:/etc/letsencrypt
     entrypoint: >
-      sh -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done"
-
-networks:
-  tododook-net:
-
-volumes:
-  mysql_data:
+      /bin/sh -c "
+      certbot certonly --webroot -w /var/www/certbot \
+      -d api.tododook.com --agree-tos --email a46884334@gmail.com --non-interactive &&
+      while :; do certbot renew; sleep 12h & wait $${!}; done
+      "
