@@ -43,6 +43,7 @@ public class OAuthService {
 
     @Transactional
     public AuthResponse kakaoLogin(String code) throws JsonProcessingException {
+        System.out.println("redirect_uri = " + kakaoRedirectUri);
         // 1. 인가 코드 → 카카오 액세스 토큰
         String kakaoAccessToken = getToken(code);
 
