@@ -1,8 +1,13 @@
 server:
   address: 0.0.0.0
   port: 8060
+  shutdown: graceful
 
 spring:
+  autoconfigure:
+    exclude:
+    lifecycle:
+      timeout-per-shutdown-phase: 1h
   application:
     name: tododook
   config:
@@ -12,6 +17,11 @@ spring:
     url: jdbc:mysql://mysql:3306/tododook?serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: 1234
+  data:
+    redis:
+      host: 172.17.0.1
+      port: 6379
+      password: ${custom.secret.spring.data.redis.password}
   jpa:
     hibernate:
       ddl-auto: update
