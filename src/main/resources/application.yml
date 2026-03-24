@@ -11,7 +11,7 @@ spring:
   application:
     name: tododook
   config:
-    import: application_secret.yml
+    import: application-secret.yml
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://172.17.0.1:3306/tododook_db
