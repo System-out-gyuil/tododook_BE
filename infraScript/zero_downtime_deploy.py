@@ -53,7 +53,7 @@ class ServiceManager:
         --restart unless-stopped \
         -p {port}:{SPRING_PROD_PORT} \
         -e TZ=Asia/Seoul \
-        -v /tododook/{DOCKER_IMAGE_NAME}/volumes/gen:/gen \
+        -v /{DOCKER_IMAGE_NAME}/volumes/gen:/gen \
         ghcr.io/{GITHUB_ID}/{DOCKER_IMAGE_NAME}:latest
         """
         result = os.system(cmd)
