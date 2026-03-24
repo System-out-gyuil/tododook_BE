@@ -7,7 +7,7 @@ import time
 from typing import Dict, Optional
 
 DOCKER_IMAGE_NAME = "tododook"
-GITHUB_ID = "System-out-gyuil"
+GITHUB_ID = "system-out-gyuil"
 SPRING_PROD_PORT = "8090"
 
 class ServiceManager:
@@ -48,8 +48,17 @@ class ServiceManager:
 
     # Docker 컨테이너를 실행하는 함수
     def _run_container(self, name: str, port: int) -> None:
-        os.system(
-            f"docker run -d --name={name} --restart unless-stopped -p {port}:{SPRING_PROD_PORT} -e TZ=Asia/Seoul -v /tododook/{DOCKER_IMAGE_NAME}/volumes/gen:/gen --pull always ghcr.io/{GITHUB_ID}/{DOCKER_IMAGE_NAME}:latest")
+        cmd = f"""
+        docker run -d --name={name} \
+        --restart unless-stopped \
+        -p {port}:{SPRING_PROD_PORT} \
+        -e TZ=Asia/Seoul \
+        -v /tododook/{DOCKER_IMAGE_NAME}/volumes/gen:/gen \
+        ghcr.io/{GITHUB_ID}/{DOCKER_IMAGE_NAME}:latest
+        """
+        result = os.system(cmd)
+        if result != 0:
+            raise Exception("Docker run failed")
 
     def _switch_port(self) -> None:
         # Socat 포트를 전환하는 함수
