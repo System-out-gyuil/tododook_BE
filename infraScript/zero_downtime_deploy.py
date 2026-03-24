@@ -48,6 +48,8 @@ class ServiceManager:
 
     # Docker 컨테이너를 실행하는 함수
     def _run_container(self, name: str, port: int) -> None:
+        os.system(f"docker pull ghcr.io/{GITHUB_ID}/{DOCKER_IMAGE_NAME}:latest")
+
         cmd = f"""
         docker run -d --name={name} \
         --restart unless-stopped \
