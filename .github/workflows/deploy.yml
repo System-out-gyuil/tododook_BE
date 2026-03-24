@@ -57,15 +57,13 @@ jobs:
           echo "OWNER_LC=${OWNER,,}" >> ${GITHUB_ENV}
         env:
           OWNER: "${{ github.repository_owner }}"
-      - name: gradlew 실행 권한 부여
-        run: chmod +x gradlew
+
       - name: application-secret.yml 생성
         env:
           ACTIONS_STEP_DEBUG: true
           APPLICATION_SECRET: ${{ secrets.APPLICATION_SECRET_YML }}
         run: echo "$APPLICATION_SECRET" > src/main/resources/application-secret.yml
-      - name: Gradle build
-        run: ./gradlew clean build -x test
+
       - name: 빌드 앤 푸시
         uses: docker/build-push-action@v3
         with:
