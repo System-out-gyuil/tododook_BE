@@ -87,7 +87,7 @@ jobs:
           working-directory: /
           comment: Deploy
           command: |
-            mkdir -p /${{ env.DOCKER_IMAGE_NAME }}
-            curl -o /${{ env.DOCKER_IMAGE_NAME }}/zero_downtime_deploy.py https://raw.githubusercontent.com/${{env.GITHUB_ID}}/${{ env.GITHUB_REPO_NAME }}/master/infraScript/zero_downtime_deploy.py
-            chmod +x /${{ env.DOCKER_IMAGE_NAME }}/zero_downtime_deploy.py
-            /${{ env.DOCKER_IMAGE_NAME }}/zero_downtime_deploy.py
+            cd /tododook
+            curl -o infraScript/zero_downtime_deploy.py https://raw.githubusercontent.com/${{env.GITHUB_ID}}/${{ env.GITHUB_REPO_NAME }}/master/infraScript/zero_downtime_deploy.py
+            chmod +x infraScript/zero_downtime_deploy.py
+            python3 infraScript/zero_downtime_deploy.py
