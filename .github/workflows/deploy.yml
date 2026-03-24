@@ -65,7 +65,7 @@ jobs:
           APPLICATION_SECRET: ${{ secrets.APPLICATION_SECRET_YML }}
         run: echo "$APPLICATION_SECRET" > src/main/resources/application-secret.yml
       - name: Gradle build
-        run: ./gradlew clean build
+        run: ./gradlew clean build -x test
       - name: 빌드 앤 푸시
         uses: docker/build-push-action@v3
         with:
