@@ -8,7 +8,7 @@ from typing import Dict, Optional
 
 DOCKER_IMAGE_NAME = "tododook"
 GITHUB_ID = "System-out-gyuil"
-SPRING_PROD_PORT = "8060"
+SPRING_PROD_PORT = "8090"
 
 class ServiceManager:
     # 초기화 함수

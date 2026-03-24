@@ -68,8 +68,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ env.OWNER_LC }}/${{env.DOCKER_IMAGE_NAME}}:${{ needs.makeTagAndRelease.outputs.tag_name }},
-            ghcr.io/${{ env.OWNER_LC }}/${{env.DOCKER_IMAGE_NAME}}:latest
+            ghcr.io/${{ env.OWNER_LC }}/${{ env.DOCKER_IMAGE_NAME }}:${{ needs.makeTagAndRelease.outputs.tag_name }},
+            ghcr.io/${{ env.OWNER_LC }}/${{ env.DOCKER_IMAGE_NAME }}:latest
   deploy:
     runs-on: ubuntu-latest
     needs: [ buildImageAndPush ]
@@ -81,11 +81,11 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          instance-ids: ${{env.AWS_EC2_INSTANCE_IDS}}
+          instance-ids: ${{ env.AWS_EC2_INSTANCE_IDS }}
           working-directory: /
           comment: Deploy
           command: |
-            mkdir -p /dockerProjects/${{env.DOCKER_IMAGE_NAME}}
-            curl -o /dockerProjects/${{env.DOCKER_IMAGE_NAME}}/zero_downtime_deploy.py https://raw.githubusercontent.com/${{env.GITHUB_ID}}/${{env.GITHUB_REPO_NAME}}/main/infraScript/zero_downtime_deploy.py
-            chmod +x /dockerProjects/${{env.DOCKER_IMAGE_NAME}}/zero_downtime_deploy.py
-            /dockerProjects/${{env.DOCKER_IMAGE_NAME}}/zero_downtime_deploy.py
+            mkdir -p /tododook/${{ env.DOCKER_IMAGE_NAME }}
+            curl -o /tododook/${{ env.DOCKER_IMAGE_NAME }}/zero_downtime_deploy.py https://raw.githubusercontent.com/${{env.GITHUB_ID}}/${{ env.GITHUB_REPO_NAME }}/master/infraScript/zero_downtime_deploy.py
+            chmod +x /tododook/${{ env.DOCKER_IMAGE_NAME }}/zero_downtime_deploy.py
+            /tododook/${{ env.DOCKER_IMAGE_NAME }}/zero_downtime_deploy.py
