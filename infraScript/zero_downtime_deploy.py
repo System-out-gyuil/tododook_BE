@@ -54,7 +54,7 @@ class ServiceManager:
         -p {port}:{SPRING_PROD_PORT} \
         -e TZ=Asia/Seoul \
         -v /{DOCKER_IMAGE_NAME}/volumes/gen:/gen \
-        ghcr.io/{GITHUB_ID}/{DOCKER_IMAGE_NAME}:latest
+        ghcr.io/{GITHUB_ID}/{DOCKER_IMAGE_NAME}
         """
         result = os.system(cmd)
         if result != 0:
