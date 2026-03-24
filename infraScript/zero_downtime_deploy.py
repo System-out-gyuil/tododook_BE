@@ -49,7 +49,7 @@ class ServiceManager:
     # Docker 컨테이너를 실행하는 함수
     def _run_container(self, name: str, port: int) -> None:
         os.system(
-            f"docker run -d --name={name} --restart unless-stopped -p {port}:{SPRING_PROD_PORT} -e TZ=Asia/Seoul -v /dockerProjects/{DOCKER_IMAGE_NAME}/volumes/gen:/gen --pull always ghcr.io/{GITHUB_ID}/{DOCKER_IMAGE_NAME}")
+            f"docker run -d --name={name} --restart unless-stopped -p {port}:{SPRING_PROD_PORT} -e TZ=Asia/Seoul -v /tododook/{DOCKER_IMAGE_NAME}/volumes/gen:/gen --pull always ghcr.io/{GITHUB_ID}/{DOCKER_IMAGE_NAME}:latest")
 
     def _switch_port(self) -> None:
         # Socat 포트를 전환하는 함수
