@@ -3,7 +3,7 @@ env:
   DOCKER_IMAGE_NAME: tododook
   GITHUB_ID: System-out-gyuil
   GITHUB_REPO_NAME: tododook_BE
-  AWS_EC2_INSTANCE_IDS: i-042875893ac9b21b2
+  AWS_EC2_INSTANCE_IDS: i-0cd057a148bfef930
 on:
   push:
     paths:

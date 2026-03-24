@@ -1,6 +1,6 @@
 server:
   address: 0.0.0.0
-  port: 8060
+  port: 8090
   shutdown: graceful
 
 spring:
@@ -14,7 +14,7 @@ spring:
     import: application_secret.yml
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql:3306/tododook?serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://172.17.0.1:3306/tododook_db
     username: root
     password: 1234
   data:

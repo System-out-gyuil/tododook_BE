@@ -46,10 +46,10 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "http://localhost:3000",
-                "http://43.200.125.100",
-                "http://43.200.125.100:80",
-                "http://43.200.125.100:3000",
-                "http://43.200.125.100:5173",
+                "http://13.125.104.26",
+                "http://13.125.104.26:80",
+                "http://13.125.104.26:3000",
+                "http://13.125.104.26:5173",
                 // EC2/배포 도메인에서 요청할 때 origin 허용
                 "https://tododook.com",
                 "https://www.tododook.com",
