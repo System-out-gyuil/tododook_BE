@@ -57,6 +57,8 @@ jobs:
           echo "OWNER_LC=${OWNER,,}" >> ${GITHUB_ENV}
         env:
           OWNER: "${{ github.repository_owner }}"
+      - name: gradlew 실행 권한 부여
+        run: chmod +x gradlew
       - name: application-secret.yml 생성
         env:
           ACTIONS_STEP_DEBUG: true
