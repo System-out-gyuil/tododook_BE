@@ -82,16 +82,15 @@ class ServiceManager:
         pid: str = subprocess.getoutput(cmd)
         log(f"[switch_port] 기존 socat PID 조회 결과: '{pid}'")
 
+        socat_cmd = f"bash -c 'nohup socat -t0 TCP-LISTEN:{self.socat_port},fork,reuseaddr TCP:localhost:{self.next_port} >/dev/null 2>&1 &'"
+
         if pid:
             log(f"[switch_port] 기존 socat 종료 시도: kill -9 {pid}")
             ret = os.system(f"kill -9 {pid} 2>/dev/null")
             log(f"[switch_port] kill 반환코드: {ret}")
         else:
             log("[switch_port] 종료할 socat 프로세스 없음")
-
-        time.sleep(5)
-
-        socat_cmd = f"bash -c 'nohup socat -t0 TCP-LISTEN:{self.socat_port},fork,reuseaddr TCP:localhost:{self.next_port} >/dev/null 2>&1 &'"
+            
         log(f"[switch_port] 새 socat 실행 명령어: {socat_cmd}")
         ret = os.system(socat_cmd)
         log(f"[switch_port] socat 실행 반환코드: {ret}")
