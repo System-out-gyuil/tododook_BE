@@ -38,6 +38,5 @@ out/
 
 application-secret.yml
 application-local.yml
-application.yml
 
 .terraform/
