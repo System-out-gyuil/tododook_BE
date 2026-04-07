@@ -39,6 +39,15 @@ spring:
       max-file-size: 5MB      # 파일 1개 최대 크기
       max-request-size: 10MB  # 전체 요청 최대 크기
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
 jwt:
   secret: tododook-jwt-secret-key-min-256-bits-for-hs256-please-change-in-production
   expiration-ms: 86400000
