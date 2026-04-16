@@ -27,7 +27,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
     // [최대 요청 수, 윈도우(초)]
     private static final int[] LIMIT_LOGIN    = {5,   60};      // 5회 / 1분
     private static final int[] LIMIT_SIGNUP   = {3,   3600};    // 3회 / 1시간
-    private static final int[] LIMIT_GET      = {100, 60};      // 100회 / 1분
+    private static final int[] LIMIT_GET      = {100000, 3600};      // 100회 / 1분
     private static final int[] LIMIT_DEFAULT  = {60,  60};      // 60회 / 1분
 
     @Override
