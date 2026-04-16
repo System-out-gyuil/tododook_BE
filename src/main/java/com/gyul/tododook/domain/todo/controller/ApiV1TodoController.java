@@ -51,8 +51,13 @@ public class ApiV1TodoController {
     public ResponseEntity<List<TodoCategoryDto>> getCategories() {
         Long userId = getCurrentUserId();
 
-        System.out.println("test");
         return ResponseEntity.ok(categoryService.getCategoriesByUserId(userId));
+    }
+
+    // ========== Categories ==========
+    @GetMapping("/categories/test")
+    public ResponseEntity<List<TodoCategoryDto>> getCategoriesTest() {
+        return ResponseEntity.ok(categoryService.getCategoriesByUserId(1L));
     }
 
     @PostMapping("/categories")
