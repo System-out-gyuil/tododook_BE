@@ -1,5 +1,6 @@
 package com.gyul.tododook.domain.todo.controller;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.gyul.tododook.domain.todo.dto.CategoryReorderRequest;
 import com.gyul.tododook.domain.todo.dto.RoutineCreateRequest;
 import com.gyul.tododook.domain.todo.dto.RoutineDto;
@@ -49,6 +50,8 @@ public class ApiV1TodoController {
     @GetMapping("/categories")
     public ResponseEntity<List<TodoCategoryDto>> getCategories() {
         Long userId = getCurrentUserId();
+
+        System.out.println("test");
         return ResponseEntity.ok(categoryService.getCategoriesByUserId(userId));
     }
 

@@ -13,6 +13,6 @@ export const options = {
 
 
 export default function () {
-  http.get("http://localhost:8090/api/v1/categories");
+  http.get("https://api.tododook.com/api/v1/categories");
   sleep(1);
 }
