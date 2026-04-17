@@ -10,6 +10,8 @@ import com.gyul.tododook.domain.todo.repository.TodoRoutineRepository;
 import com.gyul.tododook.domain.user.entity.User;
 import com.gyul.tododook.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +26,13 @@ public class TodoCategoryService {
     private final TodoRoutineRepository routineRepository;
     private final UserRepository userRepository;
 
+    @Cacheable(value = "categories", key = "#userId")
     @Transactional(readOnly = true)
     public List<TodoCategoryDto> getCategoriesByUserId(Long userId) {
         return categoryRepository.findDtosByUserId(userId);
     }
 
+    @CacheEvict(value = "categories", key = "#userId")
     @Transactional
     public TodoCategoryDto createCategory(Long userId, TodoCategoryCreateRequest request) {
         User user = userRepository.findById(userId)
@@ -44,6 +48,7 @@ public class TodoCategoryService {
         return toDto(category);
     }
 
+    @CacheEvict(value = "categories", key = "#userId")
     @Transactional
     public TodoCategoryDto updateCategory(Long userId, Long categoryId, TodoCategoryUpdateRequest request) {
         TodoCategory category = categoryRepository.findById(categoryId)
@@ -59,6 +64,7 @@ public class TodoCategoryService {
         return toDto(category);
     }
 
+    @CacheEvict(value = "categories", key = "#userId")
     @Transactional
     public void deleteCategory(Long userId, Long categoryId) {
         TodoCategory category = categoryRepository.findById(categoryId)
@@ -72,6 +78,7 @@ public class TodoCategoryService {
         categoryRepository.delete(category);
     }
 
+    @CacheEvict(value = "categories", key = "#userId")
     @Transactional
     public void reorderCategories(Long userId, List<Long> categoryIds) {
         if (categoryIds == null || categoryIds.isEmpty()) {
