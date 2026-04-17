@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +26,7 @@ public class TodoCategoryService {
 
     @Transactional(readOnly = true)
     public List<TodoCategoryDto> getCategoriesByUserId(Long userId) {
-        return categoryRepository.findByUser_IdOrderByCategoryOrder(userId).stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+        return categoryRepository.findDtosByUserId(userId);
     }
 
     @Transactional
