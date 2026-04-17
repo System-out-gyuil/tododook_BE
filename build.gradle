@@ -44,6 +44,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-session-data-redis'
 	implementation 'org.springframework.session:spring-session-data-redis'
+	implementation 'org.apache.commons:commons-pool2'
 
 //	aws s3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
