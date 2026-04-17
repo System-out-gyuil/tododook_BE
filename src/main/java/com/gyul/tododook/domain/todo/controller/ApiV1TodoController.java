@@ -57,6 +57,7 @@ public class ApiV1TodoController {
     // ========== Categories ==========
     @GetMapping("/categories/test")
     public ResponseEntity<List<TodoCategoryDto>> getCategoriesTest() {
+        
         return ResponseEntity.ok(categoryService.getCategoriesByUserId(1L));
     }
 

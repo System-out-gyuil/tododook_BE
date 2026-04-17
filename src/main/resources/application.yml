@@ -1,7 +1,15 @@
 server:
-  address: 0.0.0.0
-  port: 8090
-  shutdown: graceful
+  address: 0.0.0.0               # 모든 IP에서 접근 가능하도록 설정 (컨테이너 환경 필수)
+  port: 8090                     # Spring Boot 실행 포트
+  shutdown: graceful             # 서버 종료 시 현재 처리 중인 요청을 마무리하고 종료
+
+  tomcat:
+    threads:
+      max: 300                   # 동시에 처리 가능한 최대 요청 수 (thread 수) → 트래픽 대응 핵심 설정
+      min-spare: 50              # 항상 유지할 최소 thread 수 → 요청 급증 시 빠르게 대응
+
+    accept-count: 200            # 모든 thread가 사용 중일 때 추가 요청을 대기시키는 큐 크기
+                                # 초과 시 요청 거부 또는 timeout 발생
 
 spring:
   autoconfigure:
@@ -18,6 +26,12 @@ spring:
 #    url: jdbc:mysql://localhost:3307/tododook_local?serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: 1234
+    hikari:
+      maximum-pool-size: 50      # 동시에 DB에 접근할 수 있는 최대 커넥션 수 (기본값 10 → 트래픽 대응 위해 증가)
+      minimum-idle: 20           # 유휴 상태로 미리 유지할 최소 커넥션 수 (요청 시 즉시 처리 가능하도록 확보)
+      connection-timeout: 30000  # 커넥션을 얻기 위해 기다리는 최대 시간 (ms) → 초과 시 timeout 발생
+      idle-timeout: 600000       # 사용되지 않는 커넥션을 유지하는 최대 시간 (ms) → 이후 커넥션 반환
+      max-lifetime: 1800000      # 커넥션 최대 생존 시간 (ms) → 일정 시간 후 재생성 (DB와 연결 안정성 확보)
   data:
     redis:
       host: 172.17.0.1
@@ -31,8 +45,8 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
+        format_sql: false
+        show_sql: false
         dialect: org.hibernate.dialect.MySQLDialect
   servlet:
     multipart:
