@@ -9,13 +9,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -25,10 +26,24 @@ public class RateLimitFilter extends OncePerRequestFilter {
     private final StringRedisTemplate redisTemplate;
 
     // [최대 요청 수, 윈도우(초)]
-    private static final int[] LIMIT_LOGIN    = {5,   60};      // 5회 / 1분
-    private static final int[] LIMIT_SIGNUP   = {3,   3600};    // 3회 / 1시간
-    private static final int[] LIMIT_GET      = {100000, 3600};      // 100회 / 1분
-    private static final int[] LIMIT_DEFAULT  = {60,  60};      // 60회 / 1분
+    private static final int[] LIMIT_LOGIN    = {5,   60};
+    private static final int[] LIMIT_SIGNUP   = {3,   3600};
+    private static final int[] LIMIT_GET      = {100000, 3600};
+    private static final int[] LIMIT_DEFAULT  = {60,  60};
+
+    /**
+     * INCR + EXPIRE를 하나의 Lua 스크립트로 원자적 처리
+     * - Redis 왕복 횟수: 2번 → 1번으로 감소
+     * - 반환값: 현재 카운트
+     */
+    private static final DefaultRedisScript<Long> RATE_LIMIT_SCRIPT = new DefaultRedisScript<>(
+            "local count = redis.call('INCR', KEYS[1])\n" +
+            "if count == 1 then\n" +
+            "  redis.call('EXPIRE', KEYS[1], ARGV[1])\n" +
+            "end\n" +
+            "return count",
+            Long.class
+    );
 
     @Override
     protected void doFilterInternal(@Nonnull HttpServletRequest request,
@@ -54,7 +69,6 @@ public class RateLimitFilter extends OncePerRequestFilter {
                 return;
             }
         } catch (RedisConnectionFailureException e) {
-            // Redis 연결 실패 시 레이트 리밋을 건너뛰고 요청을 통과시킴 (fail-open)
             log.warn("[RateLimit] Redis 연결 실패로 레이트 리밋 건너뜀: {}", e.getMessage());
         } catch (Exception e) {
             log.warn("[RateLimit] 예기치 않은 오류로 레이트 리밋 건너뜀: {}", e.getMessage());
@@ -87,10 +101,11 @@ public class RateLimitFilter extends OncePerRequestFilter {
     }
 
     private boolean isAllowed(String key, int maxRequests, int windowSeconds) {
-        Long count = redisTemplate.opsForValue().increment(key);
-        if (count != null && count == 1) {
-            redisTemplate.expire(key, windowSeconds, TimeUnit.SECONDS);
-        }
+        Long count = redisTemplate.execute(
+                RATE_LIMIT_SCRIPT,
+                List.of(key),
+                String.valueOf(windowSeconds)
+        );
         return count != null && count <= maxRequests;
     }
 
