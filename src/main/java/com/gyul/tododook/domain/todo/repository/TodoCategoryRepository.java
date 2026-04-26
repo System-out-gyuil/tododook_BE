@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface TodoCategoryRepository extends JpaRepository<TodoCategory, Long> {
 
-    // getCategoriesByUserId 전용: 엔티티 로드 없이 DTO로 직접 프로젝션
+    // getCategoriesByUserId 엔티티 로드 없이 DTO로 직접 프로젝션
     @Query("SELECT new com.gyul.tododook.domain.todo.dto.TodoCategoryDto(" +
            "c.id, c.name, c.color, c.categoryOrder, c.reveal) " +
            "FROM TodoCategory c WHERE c.user.id = :userId ORDER BY c.categoryOrder")
